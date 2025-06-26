@@ -1,0 +1,6 @@
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.db-shm
+*.db-wal
