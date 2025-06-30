@@ -81,4 +81,6 @@ At the moment, the dataset (both SQLite3 & BigQuery versions) is static (with a 
 
 ---
 
-**License:** provided *as-is*; we'll review PRs when time permits. We intend to update the DB on a monthly basis, but no guarantees.
+This repository is provided *as-is*; we'll review PRs when time permits. We intend to update the DB on a monthly basis, but no guarantees.
+
+**Disclaimer**: This tool is intended exclusively for authorized defensive security operations. Always obtain explicit permission before performing any analysis, never access or download data you're not authorized to, and any unauthorized or malicious use is strictly prohibited and at your own risk.
