@@ -4,7 +4,7 @@ This tool scans for secrets in dangling (dereferenced) commits on GitHub created
 
 ![Force Push Secret Scanner Demo](./demo.gif)
 
-This project was created in collaboration with [Sharon Brizinov](https://github.com/SharonBrizinov). Please read Sharon's blog post to learn how he identified force push commits in the GH Archive dataset and made $25k in bounties.
+This project was created in collaboration with [Sharon Brizinov](https://github.com/SharonBrizinov). Please read [Sharon's blog post](https://trufflesecurity.com/blog/guest-post-how-i-scanned-all-of-github-s-oops-commits-for-leaked-secrets) to learn how he identified force push commits in the GH Archive dataset and made $25k in bounties.
 
 ## Quickstart (recommended)
 
@@ -65,7 +65,7 @@ Run `python force_push_scanner.py -h` for full help.
 
 #### What is a Force Push?
 
-A force push occurs when developers force a change in the current commit's HEAD ref, effectively overwriting commit history. This action is often done when a developer accidentally commits data containing a mistake, like hard-coded credentials. For more details, see [Sharon's blog post](https://trufflehog.dev/blog/2025/06/25/force-push-commits/) and git's documentation on [force pushes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---force).
+A force push occurs when developers force a change in the current commit's HEAD ref, effectively overwriting commit history. This action is often done when a developer accidentally commits data containing a mistake, like hard-coded credentials. For more details, see [Sharon's blog post](https://trufflesecurity.com/blog/guest-post-how-i-scanned-all-of-github-s-oops-commits-for-leaked-secrets) and git's documentation on [force pushes](https://git-scm.com/docs/git-push#Documentation/git-push.txt---force).
 
 #### What is the GHArchive?
 
@@ -77,10 +77,10 @@ We gate large downloads behind a form to deter abuse; the public BigQuery datase
 
 #### Dataset Updates
 
-At the moment, the dataset (both SQLite3 & BigQuery versions) is static (with a last update of early June 2025). We're working on a solution to keep the dataset updated daily. When that happens, we'll update the README. Timeframe is estimated to be 1-2 weeks from public release of this tool.
+The SQLite3 Database and BigQuery Table are updated every day at 2 PM EST with the previous day's data. 
 
 ---
 
-This repository is provided *as-is*; we'll review PRs when time permits. We intend to update the DB on a monthly basis, but no guarantees.
+This repository is provided *as-is*; we'll review PRs when time permits.
 
 **Disclaimer**: This tool is intended exclusively for authorized defensive security operations. Always obtain explicit permission before performing any analysis, never access or download data you're not authorized to, and any unauthorized or malicious use is strictly prohibited and at your own risk.
