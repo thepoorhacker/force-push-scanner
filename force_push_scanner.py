@@ -33,7 +33,7 @@ except ImportError:  # graceful degradation – no colors
 
     Fore = Style = _Dummy()
 
-
+rresults = []
 def terminate(msg: str) -> None:
     """Exit the program with an error message (in red)."""
     print(f"{Fore.RED}[✗] {msg}{Style.RESET_ALL}")
@@ -84,7 +84,7 @@ def scan_with_trufflehog(repo_path: Path, since_commit: str, branch: str) -> Lis
                 since_commit,
                 "--no-update",
                 "--json",
-                "--only-verified",
+                #"--only-verified",
                 "file://" + str(repo_path.absolute()),
             ],
         )
@@ -262,27 +262,40 @@ def report(input_org: str, repos: Dict[str, List[dict]]) -> None:
 def _print_formatted_finding(finding: dict, repo_url: str) -> None:
     """Pretty-print a single TruffleHog *finding* for humans. Similar to TruffleHog's CLI output.
     """
+    result = ""
     print(f"{Fore.GREEN}")
     print(f"✅ Found verified result 🐷🔑")
     print(f"Detector Type: {finding.get('DetectorName', 'N/A')}")
+    result = result+f"Detector Type: {finding.get('DetectorName', 'N/A')}\n"
     print(f"Decoder Type: {finding.get('DecoderName', 'N/A')}")
+    result = result+f"Decoder Type: {finding.get('DecoderName', 'N/A')}\n"
 
     raw_val = finding.get('Raw') or finding.get('RawV2', '')
     print(f"Raw result: {Style.RESET_ALL}{raw_val}{Fore.GREEN}")
+    result = result+f"Raw result: {raw_val}\n"
 
     print(f"Repository: {repo_url}.git")
+    result = result+f"Repository: {repo_url}.git\n"
     print(f"Commit: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('commit')}")
+    result = result+f"Commit: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('commit')}\n"
     print(f"Email: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('email') or 'unknown'}")
+    result = result+f"Email: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('email') or 'unknown'}\n"
     print(f"File: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('file')}")
+    result = result+f"File: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('file')}\n"
     print(f"Link: {repo_url}/commit/{finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('commit')}")
+    result = result+f"Link: {repo_url}/commit/{finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('commit')}\n"
     print(f"Timestamp: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('timestamp')}")
+    result = result+f"Timestamp: {finding.get('SourceMetadata', {}).get('Data', {}).get('Git', {}).get('timestamp')}\n"
 
     # Flatten any extra metadata returned by the detector
     extra = finding.get('ExtraData') or {}
     for k, v in extra.items():
         key_str = str(k).replace('_', ' ').title()
         print(f"{key_str}: {v}")
+        result = result+f"{key_str}: {v}\n"
     print(f"{Style.RESET_ALL}")  # Blank line as separator between findings
+    result = result+f"{Style.RESET_ALL}\n"
+    rresults.append(result)
 
 
 def identify_base_commit(repo_path: Path, since_commit:str) -> str:
@@ -408,6 +421,10 @@ def main() -> None:
     
     if args.scan:
         scan_commits(args.input_org, repos)
+        if args.output:
+            if len(rresults)>0:
+                with open(args.output,"w") as write:
+                    write.write("\n".join(rresults))
     else:
         print("[✓] Exiting without scan.")
 
@@ -439,6 +456,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--db-file",
         help="Path to the SQLite database containing force-push events. 4 columns: repo_org, repo_name, before, timestamp",
+    )
+    parser.add_argument(
+        "--output",
+        help="Output File",
     )
     return parser.parse_args()
 
